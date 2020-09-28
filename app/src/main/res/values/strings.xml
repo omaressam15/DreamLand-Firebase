@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Dream Land</string>
+    <string name="canter_el_shamaly">Canter el shamaly</string>
+    <string name="canter_el_ganoby">Canter El ganoby</string>
+    <string name="image">image</string>
+    <string name="images">Image</string>
+    <string name="textview">TextView</string>
+    <string name="location">السنتر الشمالي</string>
+    <string name="dream">Dream</string>
+    <string name="imageDream">Image</string>
+</resources>
