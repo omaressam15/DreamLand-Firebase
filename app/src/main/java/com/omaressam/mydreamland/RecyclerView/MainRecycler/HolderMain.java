@@ -17,13 +17,10 @@ public class HolderMain extends RecyclerView.ViewHolder {
 
         super(itemView);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = getAdapterPosition();
-                onItemClick.onItemClick(position);
+        itemView.setOnClickListener(view -> {
+            int position = getAdapterPosition();
+            onItemClick.onItemClick(position);
 
-            }
         });
 
         initView();

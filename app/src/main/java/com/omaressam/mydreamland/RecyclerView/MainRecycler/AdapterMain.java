@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AdapterMain extends RecyclerView.Adapter<HolderMain> {
 
-    private List<Dream> dreamLand;
+    private final List<Dream> dreamLand;
     private ItemClick ItemClick;
 
     public void setItemClick (ItemClick onItemClick) {

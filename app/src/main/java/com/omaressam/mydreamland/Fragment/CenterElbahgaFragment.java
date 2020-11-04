@@ -1,18 +1,21 @@
-package com.omaressam.mydreamland.Main;
+package com.omaressam.mydreamland.Fragment;
+
+
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,47 +29,57 @@ import com.omaressam.mydreamland.RecyclerView.SanterElShamaly.ViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CanterElBahga extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+public class CenterElbahgaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView recyclerView;
     DatabaseReference reference;
     ViewAdapter viewAdapter;
     List<DreamLand> dreamLands;
     SwipeRefreshLayout swipeRefreshLayout;
+    NavController navController6;
+    ImageView imageView;
+
+    public CenterElbahgaFragment() {
+        // Required empty public constructor
+    }
+
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main3);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+     View view = inflater.inflate(R.layout.fragment_center_elbahga, container, false);
 
-        setRecyclerView();
-        setup();
+        setRecyclerView(view);
+        setup(view);
         setFirebase();
+        return view;
+    }
+    private void setup (View view) {
+
+        imageView= view.findViewById(R.id.arrow_back);
+
+        imageView.setOnClickListener(v -> navController6.popBackStack());
 
     }
 
-    private void setup () {
-        Toolbar toolbar =findViewById(R.id.toolbar2);
-        toolbar.setNavigationIcon(R.drawable.arrow_back_24);
-        toolbar.setTitle("سنتر البهجة");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController6 = Navigation.findNavController(view);
     }
 
-    public void setRecyclerView (){
+    public void setRecyclerView (View view){
 
-        recyclerView = findViewById(R.id.CenterElGharby);
 
-        swipeRefreshLayout = findViewById(R.id.swipe);
+        recyclerView = view.findViewById(R.id.CenterElGharby);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipe);
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void setFirebase() {
@@ -86,11 +99,8 @@ public class CanterElBahga extends AppCompatActivity implements SwipeRefreshLayo
                 }
                 viewAdapter = new ViewAdapter(dreamLands);
 
-                viewAdapter.OnClick(new ViewAdapter.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
+                viewAdapter.OnClick(position -> {
 
-                    }
                 });
                 recyclerView.setAdapter(viewAdapter);
             }
@@ -106,9 +116,9 @@ public class CanterElBahga extends AppCompatActivity implements SwipeRefreshLayo
 
     }
 
-    @Override
+  /*  @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-         super.onContextItemSelected(item);
+        super.onContextItemSelected(item);
 
         switch (item.getItemId()) {
             case 100:
@@ -124,9 +134,8 @@ public class CanterElBahga extends AppCompatActivity implements SwipeRefreshLayo
                 return true;
 
         }
-        return true;
+        return true;*/
 
-    }
 
     @Override
     public void onRefresh() {

@@ -1,17 +1,22 @@
-package com.omaressam.mydreamland.Main;
+package com.omaressam.mydreamland.Fragment;
+
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,45 +30,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CenterStare extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class CenterStarFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView recyclerView;
     DatabaseReference reference;
     ViewAdapter viewAdapter;
     List<DreamLand> dreamLands;
+    NavController navController6;
+    ImageView imageView;
     SwipeRefreshLayout swipeRefreshLayout;
+    BottomNavigationView bottomNavigationView;
+
+    public CenterStarFragment() {
+        // Required empty public constructor
+    }
+
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_blank, container, false);
 
-        setRecyclerView();
-        setup();
+        setRecyclerView(view);
+        setup(view);
         setFirebaseUser();
-        reference = FirebaseDatabase.getInstance().getReference("DreamLand");
+        return view;
+    }
+
+    private void setup (View view ) {
+
+        bottomNavigationView =view.findViewById(R.id.bottomNavigationView);
+
+        imageView= view.findViewById(R.id.arrow_back);
+
+        imageView.setOnClickListener(v -> navController6.popBackStack());
 
     }
 
-    private void setup () {
-        Toolbar toolbar =findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.arrow_back_24);
-        toolbar.setTitle("سنتر ستار");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController6 = Navigation.findNavController(view);
     }
 
 
-    private void setRecyclerView() {
+    private void setRecyclerView(View view ) {
 
-        recyclerView = findViewById(R.id.CanterElSamaly);
-        swipeRefreshLayout=findViewById(R.id.swipe);
+        recyclerView = view.findViewById(R.id.CanterElSamaly);
+        swipeRefreshLayout=view.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void setFirebaseUser() {
@@ -83,17 +100,10 @@ public class CenterStare extends AppCompatActivity implements SwipeRefreshLayout
                     dreamLands.add(land);
                 }
                 viewAdapter = new ViewAdapter(dreamLands);
-                viewAdapter.OnClick(new ViewAdapter.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
+                viewAdapter.OnClick(position -> {
 
-                     //   DreamLand land = new DreamLand();
 
-                     /*   Uri number = Uri.parse("tel:"+);
-                            Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
-                            startActivity(callIntent);
-*/
-                    }
+
                 });
 
                 recyclerView.setAdapter(viewAdapter);
@@ -110,7 +120,7 @@ public class CenterStare extends AppCompatActivity implements SwipeRefreshLayout
 
     }
 
-    @Override
+   /* @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         super.onContextItemSelected(item);
 
@@ -129,7 +139,7 @@ public class CenterStare extends AppCompatActivity implements SwipeRefreshLayout
 
         }
         return true;
-    }
+    }*/
 
     @Override
     public void onRefresh() {

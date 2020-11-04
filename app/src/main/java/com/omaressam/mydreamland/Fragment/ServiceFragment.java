@@ -1,14 +1,19 @@
-package com.omaressam.mydreamland.Main;
+package com.omaressam.mydreamland.Fragment;
 
+import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,45 +27,57 @@ import com.omaressam.mydreamland.RecyclerView.SanterElShamaly.ViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceDream extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ServiceFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView recyclerView;
     DatabaseReference reference;
     ViewAdapter viewAdapter;
+    ImageView imageView;
+    NavController navController7;
     List<DreamLand> dreamLands;
     SwipeRefreshLayout swipeRefreshLayout;
 
+    public ServiceFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_service_dream);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_service, container, false);
 
-        setRecyclerView();
+        setRecyclerView(view);
         setFirebase();
-        setup();
+        setup(view);
+
+        return view;
     }
 
-    private void setup () {
-        Toolbar toolbar =findViewById(R.id.toolbar4);
-        toolbar.setNavigationIcon(R.drawable.arrow_back_24);
-        toolbar.setTitle("طوارئ و خدمات");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+    private void setup(View view ) {
+
+        imageView= view.findViewById(R.id.arrow_back);
+
+        imageView.setOnClickListener(v -> navController7.popBackStack());
+
+
     }
 
-    public void setRecyclerView (){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController7 = Navigation.findNavController(view);
+    }
 
-        recyclerView = findViewById(R.id.ServesDream);
 
-        swipeRefreshLayout = findViewById(R.id.swipe);
+    public void setRecyclerView(View view ) {
+
+        recyclerView = view.findViewById(R.id.ServesDream);
+
+        swipeRefreshLayout =view.findViewById(R.id.swipe);
 
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void setFirebase() {
@@ -73,18 +90,14 @@ public class ServiceDream extends AppCompatActivity implements SwipeRefreshLayou
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren())
-                {
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     DreamLand land = ds.getValue(DreamLand.class);
                     dreamLands.add(land);
                 }
                 viewAdapter = new ViewAdapter(dreamLands);
 
-                viewAdapter.OnClick(new ViewAdapter.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
+                viewAdapter.OnClick(position -> {
 
-                    }
                 });
                 recyclerView.setAdapter(viewAdapter);
             }
@@ -100,9 +113,12 @@ public class ServiceDream extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+
+
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
         setFirebase();
     }
+
 }

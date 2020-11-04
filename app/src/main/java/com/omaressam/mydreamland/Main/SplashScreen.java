@@ -24,14 +24,10 @@ public class SplashScreen extends AppCompatActivity {
 
 
         int splash_time = 2000;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashScreen.this,MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashScreen.this,MainActivity.class);
+            startActivity(intent);
+            finish();
         }, splash_time);
         Animation animation = AnimationUtils.loadAnimation(this,R.anim.animy);
         imageView.startAnimation(animation);

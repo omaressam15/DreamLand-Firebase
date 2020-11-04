@@ -1,15 +1,22 @@
-package com.omaressam.mydreamland.Main;
+package com.omaressam.mydreamland.Fragment;
+
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,43 +29,62 @@ import com.omaressam.mydreamland.RecyclerView.SanterElShamaly.ViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlagMall extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+public class FlagMallFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView recyclerView;
     DatabaseReference reference;
     ViewAdapter viewAdapter;
     List<DreamLand> dreamLands;
     SwipeRefreshLayout swipeRefreshLayout;
+    BottomNavigationView bottomNavigationView;
+    NavController navController7;
+    ImageView imageView;
+
+
+    public FlagMallFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main4);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_flag_mall, container, false);
 
-        setRecyclerView();
+        setRecyclerView(view);
         setFirebaseUser();
-        setup();
-
+        setup(view);
+        return view;
     }
 
-    private void setRecyclerView() {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController7 = Navigation.findNavController(view);
+    }
 
-        recyclerView = findViewById(R.id.FlagMall);
-        swipeRefreshLayout=findViewById(R.id.swipe);
+
+
+    private void setRecyclerView(View view ) {
+
+        bottomNavigationView =view.findViewById(R.id.bottomNavigationView);
+
+      /*  NavController navController = Navigation.findNavController(this,R.id.fragment);
+
+        NavigationUI.setupWithNavController(bottomNavigationView,navController);*/
+
+        recyclerView = view.findViewById(R.id.FlagMall);
+        swipeRefreshLayout=view.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void setup () {
-        Toolbar toolbar =findViewById(R.id.toolbar3);
-        toolbar.setNavigationIcon(R.drawable.arrow_back_24);
-        toolbar.setTitle("فلاج مول");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+    private void setup (View view ) {
+
+        imageView= view.findViewById(R.id.arrow_back);
+
+        imageView.setOnClickListener(v -> navController7.popBackStack());
+
     }
 
     private void setFirebaseUser() {
@@ -77,14 +103,10 @@ public class FlagMall extends AppCompatActivity implements SwipeRefreshLayout.On
                     dreamLands.add(land);
                 }
                 viewAdapter = new ViewAdapter(dreamLands);
-                viewAdapter.OnClick(new ViewAdapter.OnItemClick() {
-                    @Override
-                    public void onItemClick(int position) {
+                viewAdapter.OnClick(position -> {
 
 
-                    }
                 });
-
                 recyclerView.setAdapter(viewAdapter);
             }
 

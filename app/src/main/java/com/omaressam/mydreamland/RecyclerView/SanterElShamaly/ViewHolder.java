@@ -2,14 +2,11 @@ package com.omaressam.mydreamland.RecyclerView.SanterElShamaly;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,22 +24,18 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreate
 
         super(itemView);
         initView();
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        itemView.setOnClickListener(view -> {
 
-                int position = getAdapterPosition();
-                listener.onItemClick(position);
+            int position = getAdapterPosition();
+            listener.onItemClick(position);
 
-                String phone = number.getText().toString();
-                
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:"+phone));
-                itemView.getContext().startActivity(callIntent);
+            String phone = number.getText().toString();
 
-            }
+            Intent callIntent = new Intent(Intent.ACTION_DIAL);
+            callIntent.setData(Uri.parse("tel:"+phone));
+            itemView.getContext().startActivity(callIntent);
+
         });
-
     }
 
     private void initView() {
@@ -50,9 +43,9 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreate
         name = itemView.findViewById(R.id.name);
         number = itemView.findViewById(R.id.number);
         cardView = itemView.findViewById(R.id.CardView);
-    }
+      //  cardView.setOnCreateContextMenuListener(this);
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    }
     void bindView(DreamLand dreamLand) {
 
         Picasso.get()
@@ -71,7 +64,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreate
     public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
 
         contextMenu.setHeaderTitle("Call");
-        contextMenu.add(getAdapterPosition(),100,1,"01009843926");
-        contextMenu.add(getAdapterPosition(),101,2,"01062824317");
+        contextMenu.add(getAdapterPosition(),100,1,"1");
+        contextMenu.add(getAdapterPosition(),101,2,"2");
     }
 }

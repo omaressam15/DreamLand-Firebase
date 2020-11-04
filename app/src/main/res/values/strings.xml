@@ -13,4 +13,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="E">طوارئ و خدمات</string>
+    <string name="CanterElBahga">سنتر البهجة</string>
+    <string name="image3">Image</string>
+    <string name="image1">Image1</string>
+    <string name="FlagMall">فلاج مول</string>
+    <string name="CenterStar">سنتر ستار</string>
 </resources>
